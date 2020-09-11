@@ -15,7 +15,7 @@ function getUrlContent(_url){
         result = '';
         jSetTimeout(function(){//522;
             if(result.length == 0 && !isError.data){
-                alert('Your internet connection is very slow\nIf you do not want to see this message and want make loading faster then change "changelogEnabled" to "false" in RefinedStoragePE config file');
+                alert('Your internet connection is very slow\nIf you do not want to see this message and want make loading faster then change "changelogEnabled" to "false" in iMod config file');
             }
         }, 5000);
         var _URL_ = new JAVA_URL(_url);
