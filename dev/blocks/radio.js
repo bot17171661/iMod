@@ -10,7 +10,10 @@ Block.createBlockWithRotation("iMod_radio", [
 ]);
 
 var radioBoxes = [
-    []
+    [0,0,0,0,0,0],
+    [0,0,0,0,0,0],
+    [0,0,0,0,0,0],
+    [0,0,0,0,0,0]
 ]
 for (var izxc = 0; izxc < 4; izxc++) {
     var render = new ICRender.Model();
