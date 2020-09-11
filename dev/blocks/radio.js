@@ -1,23 +1,31 @@
 IDRegistry.genBlockID("iMod_radio");
-Block.createBlock("iMod_radio", [
+Block.createBlockWithRotation("iMod_radio", [
 	{
 		name: "Radio",
 		texture: [
-            ['cable', 0]
+            ['i_radio', 0]
         ],
 		inCreative: true
 	}
 ]);
 
+var radioBoxes = [
+    []
+]
+for (var izxc = 0; izxc < 4; izxc++) {
+    var render = new ICRender.Model();
+    var _radioBox = radioBoxes[izxc];
+    render.addEntry(new BlockRenderer.Model(_radioBox[0], _radioBox[1], _radioBox[2], _radioBox[3], _radioBox[4], _radioBox[5], BlockID.iMod_radio, izxc))
+	BlockRenderer.enableCoordMapping(BlockID.iMod_radio, izxc, render);
+}
+
 var maxRadio = 0;
-var radios = [new Sound("0.ogg")]
+var radios = ['0.ogg'];
 TileEntity.registerPrototype(BlockID.iMod_radio, {
-    defaulValues:{
-        currentRadio: 0,
-        radioPlay: false
+    defaultValues:{
+        currentRadio: 0
     },
     init: function(){
-        alert('Hi');
         this.data.radioPlay = false;
     },
     click: function(){
@@ -25,14 +33,29 @@ TileEntity.registerPrototype(BlockID.iMod_radio, {
             radios[this.data.currentRadio].stop();
             return false;
         }
-        setRadio(this.data.currentRadio + 1);
+        this.setRadio(this.data.currentRadio + 1);
         return true;
+    },
+    getRadio: function(_id){
+        var thisData = tempdata[cts(this)];
+        if(!thisData) {
+            thisData = tempdata[cts(this)] = [];
+            for(var i in radios){
+                var sound = new Sound(radios[i]);
+                sound.setInBlock(this.x, this.y, this.z, 15);
+                thisData.push(sound)
+            }
+        }
+        return thisData[_id] || {stop: function(){}, play: function(){}};
     },
     setRadio: function(_id){
         if(_id >= maxRadio) _id = 0;
-        radios[this.data.currentRadio].stop();
+        this.getRadio(this.data.currentRadio).stop();
         this.data.currentRadio = _id;
-        radios[_id].play();
-        this.data.radioPlay = true;
+        var radio = this.getRadio(_id);
+        radio.play();
+    },
+    destroy: function(){
+        this.getRadio(this.data.currentRadio).stop();
     }
 })
