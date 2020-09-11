@@ -1,4 +1,8 @@
 IMPORT('SoundAPI');
+const JAVA_URL = java.net.URL;
+const BufferedReader = java.io.BufferedReader;
+const InputStreamReader = java.io.InputStreamReader;
+const Uri = android.net.Uri;
 
 const modId = 638;
 
@@ -32,7 +36,7 @@ function getUrlContent(_url){
         return {error:'408 Request Timeout'};
     } catch (e) {
         isError.data = e;
-        Logger.Log('Changelog Error: ' + JSON.stringify(e), 'RefinedStoragePE');
+        Logger.Log('Changelog Error: ' + JSON.stringify(e), 'iMod');
         return {error: e};
     }
 }
