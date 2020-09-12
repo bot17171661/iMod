@@ -43,4 +43,4 @@ function getUrlContent(_url){
 
 var currentVersion = Number(FileTools.ReadText(__dir__ + 'versionId.txt'));
 var lastVersion = Number(getUrlContent('https://icmods.mineprogramming.org/api/version?id=' + modId).data) || currentVersion;
-if(currentVersion < lastVersion) alert('Hey, new version is available for downloading please update!');
+if(currentVersion < lastVersion) alert('Hey, new version of iMod is available for downloading please update!');

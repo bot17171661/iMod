@@ -13,6 +13,7 @@ Block.createBlockWithRotation("iMod_radio", [
 		inCreative: true
 	}
 ]);
+mod_tip(BlockID["iMod_radio"]);
 
 var noteParticles = [Particles.registerParticleType({
 	texture: "Note",

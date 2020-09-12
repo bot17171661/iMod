@@ -2,3 +2,9 @@ other.js
 header.js
 
 blocks/radio.js
+blocks/dungeon_block.js
+blocks/radio_tower.js
+
+other/dungeon.js
+
+shared.js

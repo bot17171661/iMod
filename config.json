@@ -1,5 +1,6 @@
 {
   "enabled":true,
   "dev":false,
-  "changelogEnabled": true
+  "changelogEnabled": true,
+  "dungeonChance": 95
 }
