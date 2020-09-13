@@ -3,9 +3,9 @@ Block.createBlock("iMod_dungeon_block", [
 	{
 		name: "Dungeon Block",
 		texture: [
-            ['333333333333333333333333', 0]
+            ['dungeon_block', 0]
         ],
 		inCreative: true
 	}
-]);
+], 'opaque');
 mod_tip(BlockID["iMod_dungeon_block"]);

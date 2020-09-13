@@ -7,4 +7,8 @@ blocks/radio_tower.js
 
 other/dungeon.js
 
+items/craft_items.js
+items/clock.js
+
+crafts.js
 shared.js

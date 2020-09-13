@@ -6,4 +6,12 @@ var iMod = {
     addDungeonRoom: function(room){
         dungeonRooms.push(room);
     }
-}
+};
+
+ModAPI.registerAPI("iModAPI", {
+    iMod: iMod,
+    requireGlobal: function (command) {
+        return eval(command);
+    }
+});
+Logger.Log("iModAPI Loaded", "API");
