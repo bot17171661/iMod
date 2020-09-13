@@ -16,7 +16,6 @@ Callback.addCallback("PreLoaded", function () {
         "igi",
         "rir"
     ], ['i', 265, 0, 'g', 160, -1, 'r', 331, 0]);
-    
 
     Recipes.addShaped({id: ItemID["iMod_coil"], count: 1, data: 0}, [
         "www",
@@ -24,17 +23,33 @@ Callback.addCallback("PreLoaded", function () {
         "www"
     ], ['i', 265, 0, 'w', ItemID.iMod_wire, 0]);
     
-
     Recipes.addShaped({id: ItemID["iMod_wire"], count: 1, data: 0}, [
         " s ",
         " i ",
         " s "
     ], ['i', 265, 0, 's', 341, 0]);
-    
 
-    Recipes.addShaped({id: ItemID["iMod_wire"], count: 1, data: 0}, [
-        " s ",
+    Recipes.addShaped({id: ItemID["iMod_plate"], count: 1, data: 0}, [
         " i ",
-        " s "
-    ], ['i', 265, 0, 's', 341, 0]);
+        "iii",
+        " i "
+    ], ['i', 265, 0]);
+
+    Recipes.addShaped({id: ItemID["iMod_speaker"], count: 1, data: 0}, [
+        "rir",
+        "iii",
+        "rir"
+    ], ['i', 265, 0, 'r', 331, 0]);
+
+    Recipes.addShaped({id: ItemID["iMod_antenna"], count: 1, data: 0}, [
+        "rir",
+        " i ",
+        " i "
+    ], ['i', 265, 0, 'r', 331, 0]);
+
+    Recipes.addShaped({id: BlockID["iMod_radio_tower"], count: 1, data: 0}, [
+        "rir",
+        "iii",
+        "rir"
+    ], ['i', 265, 0, 'r', 331, 0]);
 });

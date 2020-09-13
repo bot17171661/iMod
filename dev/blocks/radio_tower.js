@@ -67,15 +67,7 @@ Block.registerPlaceFunction('iMod_radio_tower', function(coords, item, block){
         if(getStructure({x: coords.x, y: coords.y - 1, z: coords.z}) >= 0) return;
     }
     if(structure){
-        //alert('structure true');
-        //alert('centreBlock: ' + cts(centreBlock));
-        //if(World.getBlock(centreBlock.x, centreBlock.y, centreBlock.z).id == BlockID.iMod_radio_tower && World.getBlock(centreBlock.x, centreBlock.y - 1, centreBlock.z).id == BlockID.iMod_radio_tower && World.getBlock(centreBlock.x, centreBlock.y + 1, centreBlock.z).id == BlockID.iMod_radio_tower)alert('Blocks checked');
         structures.push([{x: centreBlock.x, y: centreBlock.y - 1, z: centreBlock.z}, {x: centreBlock.x, y: centreBlock.y, z: centreBlock.z}, {x: centreBlock.x, y: centreBlock.y + 1, z: centreBlock.z}]);
-        /* var render = new ICRender.Model();
-        var renderMesh = new RenderMesh('radio_tower.obj', 'obj', {invertV: false});
-        renderMesh.setBlockTexture('iMod_post', 0);
-        render.addEntry(renderMesh);
-        BlockRenderer.mapAtCoords(centreBlock.x, centreBlock.y + 1, centreBlock.z, render); */
         
         var render = new ICRender.Model();
         var model = BlockRenderer.createModel();

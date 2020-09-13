@@ -16,7 +16,7 @@ for(var ka = 0; ka < 4; ka++){
     var _pis = [Math.PI,0,Math.PI/2,Math.PI*1.5];
     var _renderMesh = new RenderMesh('carpet.obj', 'obj');
     _renderMesh.rotate(0, _pis[ka], 0);
-    _renderMesh.setBlockTexture('carpet', 0);
+    _renderMesh.setBlockTexture('iModcarpet', 0);
     _renderMesh.scale(0.5,1,0.5);
     //_renderMesh.translate(2,0,1.375);
     render.addEntry(new BlockRenderer.Model(_renderMesh))
