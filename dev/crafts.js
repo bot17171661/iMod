@@ -15,5 +15,26 @@ Callback.addCallback("PreLoaded", function () {
         "rir",
         "igi",
         "rir"
-    ], ['i', 265, 0, 'g', 160, -1, 'g', 331, 0]);
+    ], ['i', 265, 0, 'g', 160, -1, 'r', 331, 0]);
+    
+
+    Recipes.addShaped({id: ItemID["iMod_coil"], count: 1, data: 0}, [
+        "www",
+        "wiw",
+        "www"
+    ], ['i', 265, 0, 'w', ItemID.iMod_wire, 0]);
+    
+
+    Recipes.addShaped({id: ItemID["iMod_wire"], count: 1, data: 0}, [
+        " s ",
+        " i ",
+        " s "
+    ], ['i', 265, 0, 's', 341, 0]);
+    
+
+    Recipes.addShaped({id: ItemID["iMod_wire"], count: 1, data: 0}, [
+        " s ",
+        " i ",
+        " s "
+    ], ['i', 265, 0, 's', 341, 0]);
 });

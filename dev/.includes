@@ -4,6 +4,7 @@ header.js
 blocks/radio.js
 blocks/dungeon_block.js
 blocks/radio_tower.js
+blocks/carpet.js
 
 other/dungeon.js
 

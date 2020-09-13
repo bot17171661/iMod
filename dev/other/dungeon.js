@@ -1,5 +1,19 @@
 var dungeonChance = __config__.getNumber('dungeonChance');
 
+var dungeons = [];
+var sortedDungeons = {};
+
+Saver.addSavesScope("iModDungeons",
+	function read(scope){
+		dungeons = scope && scope.dungeons ? scope.dungeons : [];
+		sortedDungeons = scope && scope.sortedDungeons ? scope.sortedDungeons : {};
+	},
+
+	function save(){
+		return {dungeons: dungeons, sortedDungeons: sortedDungeons};
+	}
+);
+
 var dungeonSize = 13;
 var dungeonHeight = 6
 
@@ -94,6 +108,7 @@ function spawnDungeon(coords, random){
             }
         }
     }
+    dungeons.push({x: coords.x + dungeonSize/2, y: coords.y, z: coords.z + dungeonSize/2});
 }
 
 World.addGenerationCallback("GenerateChunk", function(chunkX, chunkZ, random){
@@ -104,8 +119,8 @@ World.addGenerationCallback("GenerateChunk", function(chunkX, chunkZ, random){
 }, "iMod_dungeon");
 
 IDRegistry.genItemID("iMod_test_item");
-Item.createItem("iMod_test_item", "Magic Wand", {
-	name: "magic_wand"
+Item.createItem("iMod_test_item", "Dungeon creator", {
+	name: "iMod_test_item"
 }, {
 	stack: 1
 });

@@ -40,7 +40,7 @@ mod_tip(ItemID["iMod_speaker"]);
 
 Callback.addCallback("PreLoaded", function () {
     dungeonLoot.push({id: ItemID["iMod_coil"], count: [1, 3], data: 0, extra: null, chance: 80});
-    dungeonLoot.push({id: ItemID["iMod_wire"], count: [1, 3], data: 0, extra: null, chance: 30});
-    dungeonLoot.push({id: ItemID["iMod_antenna"], count: [1, 3], data: 0, extra: null, chance: 30});
-    dungeonLoot.push({id: ItemID["iMod_speaker"], count: [1, 3], data: 0, extra: null, chance: 30});
+    dungeonLoot.push({id: ItemID["iMod_wire"], count: [1, 3], data: 0, extra: null, chance: 40});
+    dungeonLoot.push({id: ItemID["iMod_antenna"], count: [1, 3], data: 0, extra: null, chance: 40});
+    dungeonLoot.push({id: ItemID["iMod_speaker"], count: [1, 3], data: 0, extra: null, chance: 40});
 })

@@ -44,3 +44,10 @@ function getUrlContent(_url){
 var currentVersion = Number(FileTools.ReadText(__dir__ + 'versionId.txt'));
 var lastVersion = Number(getUrlContent('https://icmods.mineprogramming.org/api/version?id=' + modId).data) || currentVersion;
 if(currentVersion < lastVersion) alert('Hey, new version of iMod is available for downloading please update!');
+
+Callback.addCallback("PreLoaded", function () {
+    dungeonLoot.push({id: 264, count: [1, 3], data: 0, extra: null, chance: 30});
+    dungeonLoot.push({id: 266, count: [1, 5], data: 0, extra: null, chance: 50});
+    dungeonLoot.push({id: 265, count: [2, 6], data: 0, extra: null, chance: 70});
+    dungeonLoot.push({id: 263, count: [5, 10], data: 0, extra: null, chance: 80});
+})

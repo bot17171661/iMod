@@ -8,5 +8,5 @@ mod_tip(ItemID["iMod_compass"]);
 
 Item.registerUseFunction('iMod_compass', function(){
     var coords = Player.getPosition();
-    Game.tipMessage(coords.x + ' ' + coords.y + ' ' + coords.z);
+    Game.tipMessage(parseInt(coords.x) + ' ' + parseInt(coords.y) + ' ' + parseInt(coords.z));
 })
