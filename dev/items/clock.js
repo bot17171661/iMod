@@ -7,9 +7,21 @@ Item.createItem("iMod_clock", "Enchanted Clock", {
 mod_tip(ItemID["iMod_clock"]);
 Item.setGlint(ItemID.iMod_clock, true);
 
-Item.registerUseFunction(ItemID.iMod_clock, function(coords, items, block){
-	var _thread = java.lang.Thread.currentThread();
-	_thread.sleep(5000);
+var maxModes = 3
+Item.registerUseFunction(ItemID.iMod_clock, function(coords, item, block){
+	if(!item.extra){
+		item.extra = new ItemExtraData();
+		Player.setCarriedItem(item.id, item.count, item.data, item.extra);
+	}
+	if(Entity.getSneaking(Player.get())){
+		var mode = item.extra.getInt('mode', 1);
+		mode = mode >= 3 ? 1 : mode + 1;
+		item.extra.putInt('mode', mode);
+		Game.tipMessage('Time skipping set to: ' + (5*mode) + ' secconds');
+	} else {
+		var _thread = java.lang.Thread.currentThread();
+		_thread.sleep(5000*item.extra.getInt('mode', 1));
+	}
 })
 
 Callback.addCallback("PreLoaded", function () {
@@ -18,7 +30,7 @@ Callback.addCallback("PreLoaded", function () {
 
 IDRegistry.genItemID("iMod_clock2");
 Item.createItem("iMod_clock2", "Clock", {
-	name: "iMod_clock2"
+	name: "iMod_clock"
 }, {
 	stack: 1
 });

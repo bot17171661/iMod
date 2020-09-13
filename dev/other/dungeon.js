@@ -11,7 +11,9 @@ for(var x = 0; x < dungeonSize; x++){
     for(var y = 0; y < dungeonHeight; y++){
         for(var z = 0; z < dungeonSize; z++){
             var centre = Math.floor(dungeonSize/2);
-            if(((x == 0 || x == dungeonSize - 1 || x == centre) || (y == 0 || y == dungeonHeight - 1) || (z == 0 || z == dungeonSize - 1 || z == centre)) && !(x >= centre - 1 && x <= centre + 1 && z >= centre - 1 && z <= centre + 1 && y > 0 && y < 3))
+            if(x == centre && z == centre && y == 0)
+                mainStructure.push({id: BlockID.iMod_easter_dungeon_block, data: 0, coords: {x: x, y: y, z: z}});
+            else if(((x == 0 || x == dungeonSize - 1 || x == centre) || (y == 0 || y == dungeonHeight - 1) || (z == 0 || z == dungeonSize - 1 || z == centre)) && !(x >= centre - 1 && x <= centre + 1 && z >= centre - 1 && z <= centre + 1 && y > 0 && y < 3))
                 mainStructure.push({id: BlockID.iMod_dungeon_block, data: 0, coords: {x: x, y: y, z: z}});
             else
                 mainStructure.push({id: 0, data: 0, coords: {x: x, y: y, z: z}});

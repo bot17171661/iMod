@@ -9,6 +9,7 @@ other/dungeon.js
 
 items/craft_items.js
 items/clock.js
+items/compass.js
 
 crafts.js
 shared.js

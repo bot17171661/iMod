@@ -10,4 +10,10 @@ Callback.addCallback("PreLoaded", function () {
         "gsg",
         " g "
     ], ['g', 266, 0, 's', 160, -1]);
+
+    Recipes.addShaped({id: ItemID["iMod_compass"], count: 1, data: 0}, [
+        "rir",
+        "igi",
+        "rir"
+    ], ['i', 265, 0, 'g', 160, -1, 'g', 331, 0]);
 });
