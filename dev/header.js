@@ -4,7 +4,7 @@ const BufferedReader = java.io.BufferedReader;
 const InputStreamReader = java.io.InputStreamReader;
 const Uri = android.net.Uri;
 
-const modId = 665;
+const modId = 666;
 
 var tempdata = {};
 Callback.addCallback('LevelLeft', function(){
