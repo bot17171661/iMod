@@ -67,6 +67,7 @@ for(var i = 0; i < soundList.length; i++){
 }
 var maxRadio = radios.length - 1;
 TileEntity.registerPrototype(BlockID.iMod_radio, {
+	useNetworkItemContainer: true,
     defaultValues:{
         currentRadio: 0,
         radioPlay: false,
@@ -75,16 +76,16 @@ TileEntity.registerPrototype(BlockID.iMod_radio, {
     init: function(){
         this.data.radioPlay = false;
     },
-    click: function(){
-        if(Entity.getSneaking(Player.get())){
-            this.getRadio(this.data.currentRadio).stop();
+    click: function(id, count, data, coords, player, extra){
+        if(Entity.getSneaking(player)){
+            this.stopMusic();
             this.data.radioPlay = false;
             return false;
         }
         this.setRadio(this.data.currentRadio + 1);
         return true;
     },
-    getRadio: function(_id){
+    /* getRadio: function(_id){
         var thisData = tempdata[cts(this)];
         if(!thisData) {
             thisData = tempdata[cts(this)] = [];
@@ -99,24 +100,106 @@ TileEntity.registerPrototype(BlockID.iMod_radio, {
             }
         }
         return thisData[_id] || {stop: function(){}, play: function(){}};
-    },
+    }, */
     setRadio: function(_id){
         if(_id >= maxRadio) _id = 0;
-        this.getRadio(this.data.currentRadio).stop();
         this.data.currentRadio = _id;
-        var radio = this.getRadio(_id);
+        this.playMusic(radios[_id]);
         this.data.radioPlay = true;
-        radio.play();
+    },
+    playMusic: function(name){
+        this.sendPacket('playMusic', {name: name})
+    },
+    stopMusic: function(){
+        this.sendPacket('stopMusic', {})
     },
     tick: function(){
         this.data.ticks++;
         if(this.data.radioPlay && this.data.ticks%25 == 0){
-			var emitter = new Particles.ParticleEmitter(this.x + 0.5 + Math.random()/10, this.y + 0.6, this.z + 0.5 + Math.random()/10);
+			/* var emitter = new Particles.ParticleEmitter(this.x + 0.5 + Math.random()/10, this.y + 0.6, this.z + 0.5 + Math.random()/10);
 			emitter.setEmitRelatively(true);
-			emitter.emit(noteParticles[_randomInt(0,3)], 0, 0, 0, 0);
+            emitter.emit(noteParticles[_randomInt(0,3)], 0, 0, 0, 0); */
+            this.sendPacket('emitParticle', {i: _randomInt(0,3)})
         }
     },
-    destroy: function(){
-        this.getRadio(this.data.currentRadio).stop();
+    /* destroy: function(){
+        this.stopMusic();
+    }, */
+    events: {
+        nextRadio: function(){
+            this.setRadio(this.data.currentRadio + 1);
+        },
+        requireDownloading: function(packetData, packetExtra, connectedClient) {
+            //alert('Donwloading required: ' + packetData.name);
+            alert('Other players do not have this music: ' + packetData.name);
+            //this.sendResponse("donwload", {data: FileTools.ReadText(__dir__ + 'sounds/' + packetData.name), name: packetData.name});
+        },
+        stopMusic: function(){
+            this.stopMusic();
+        },
+        playCurrentMusic: function(){
+            this.setRadio(this.data.currentRadio);
+        }
+    },
+    client: {
+        unload: function(){
+            if(this.currentSound){
+                this.currentSound.stop();
+                this.currentSound = null;
+            }
+        },
+        currentSound: null,
+        downloading: false,
+        playMusic: function(name){
+            //alert('Play music: ' + name);
+            if(this.currentSound)this.currentSound.stop();
+            if(!FileTools.isExists(__dir__+"sounds/"+name)){
+                //alert('Require downloading');
+                this.downloading = true;
+                this.sendPacket('stopMusic', {});
+                this.sendPacket('requireDownloading', {name: name});
+                return;
+            }
+            var sound = new Sound(name);
+            sound.setInBlock(this.x, this.y, this.z, 30);
+            var ths = this;
+            sound.setOnCompletion(function(){
+                ths.sendPacket('nextRadio', {});
+            });
+            sound.play();
+            this.currentSound = sound;
+        },
+        stopMusic: function(packetData, packetExtra){
+            if(this.currentSound){
+                this.currentSound.stop();
+                this.currentSound = null;
+            }
+        },
+        events: {
+            playMusic: function(packetData, packetExtra) {
+                this.playMusic(packetData.name);
+            },
+            stopMusic: function(packetData, packetExtra){
+                if(this.currentSound){
+                    this.currentSound.stop();
+                    this.currentSound = null;
+                }
+            },
+            emitParticle: function(packetData, packetExtra){
+                var emitter = new Particles.ParticleEmitter(this.x + 0.5 + Math.random()/10, this.y + 0.6, this.z + 0.5 + Math.random()/10);
+                emitter.setEmitRelatively(true);
+                emitter.emit(noteParticles[packetData.i], 0, 0, 0, 0);
+            },
+            donwload: function(packetData, packetExtra){
+                //alert('Donwloading success! ' + packetData.name);
+                if(packetData.data){
+                    FileTools.WriteText(__dir__ + 'sounds/' + packetData.name, packetData.data);
+                    if(this.downloading){
+                        this.sendPacket('playCurrentMusic', {});
+                        this.downloading = false;
+                    }
+                }
+            }
+        }
     }
 });

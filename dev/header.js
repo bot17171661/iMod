@@ -51,3 +51,10 @@ Callback.addCallback("PreLoaded", function () {
     dungeonLoot.push({id: 265, count: [2, 6], data: 0, extra: null, chance: 70});
     dungeonLoot.push({id: 263, count: [5, 10], data: 0, extra: null, chance: 80});
 })
+
+Network.addClientPacket("iMod.message", function(packetData) {
+    Game.message(packetData.text);
+});
+Network.addClientPacket("iMod.tipmessage", function(packetData) {
+    Game.tipMessage(packetData.text);
+});

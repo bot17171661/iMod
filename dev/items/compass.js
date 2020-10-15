@@ -6,7 +6,8 @@ Item.createItem("iMod_compass", "Compass", {
 });
 mod_tip(ItemID["iMod_compass"]);
 
-Item.registerUseFunction('iMod_compass', function(){
+Item.registerUseFunction('iMod_compass', function(coords, item, block, player){
     var coords = Player.getPosition();
-    Game.tipMessage(parseInt(coords.x) + ' ' + parseInt(coords.y) + ' ' + parseInt(coords.z));
+    var client = Network.getClientForPlayer(player);
+    client.send('iMod.tipmessage', {text: parseInt(coords.x) + ' ' + parseInt(coords.y) + ' ' + parseInt(coords.z)});
 })

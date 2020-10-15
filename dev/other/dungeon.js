@@ -112,7 +112,7 @@ function spawnDungeon(coords, random){
 }
 
 World.addGenerationCallback("GenerateChunk", function(chunkX, chunkZ, random){
-    if(random.nextInt(100) < dungeonChance) return;
+    if(random.nextInt(100) > dungeonChance) return;
     var coords = {x: chunkX*16 + random.nextInt(16), y: 10 + random.nextInt(10), z: chunkZ*16 + random.nextInt(16)};
     //alert(cts(coords));
     spawnDungeon(coords, random);

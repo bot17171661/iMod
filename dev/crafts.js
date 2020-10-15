@@ -52,4 +52,10 @@ Callback.addCallback("PreLoaded", function () {
         "iii",
         "rir"
     ], ['i', 265, 0, 'r', 331, 0]);
+
+    Recipes.addShaped({id: BlockID["iMod_carpet"], count: 1, data: 0}, [
+        "ccc",
+        "ccc",
+        "ccc"
+    ], ['c', 171, -1]);
 });

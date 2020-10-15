@@ -38,16 +38,53 @@ function getStructure(coords){
     }
 }
 
-Block.registerPlaceFunction('iMod_radio_tower', function(coords, item, block){
+Network.addClientPacket("iMod.mapRadioTower", function(packetData) {
+    var coords = packetData.coords;
+    var currentDim = BlockSource.getDefaultForActor(Network.getClient().getPlayerUid()).getDimension();
+    if(currentDim != packetData.dimension) return;
+
+    var render = new ICRender.Model();
+    var model = BlockRenderer.createModel();
+    model.addBox(0.3,0,0.3,0.7,0.6,0.7, [['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up2', 0], ['iMod_radio_tower_down', 0], ['iMod_radio_tower_down', 0], ['iMod_radio_tower_down', 0], ['iMod_radio_tower_down', 0]]);
+    model.addBox(0.4,0.6,0.4,0.6,1,0.6, [['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up2', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0]]/* 'iMod_radio_tower_centre' */);
+    render.addEntry(model);
+    BlockRenderer.mapAtCoords(coords.x, coords.y - 1, coords.z, render);
+
+    render = new ICRender.Model();
+    model = BlockRenderer.createModel();
+    model.addBox(0.4,0,0.4,0.6,1,0.6, [['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up2', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0]]/* 'iMod_radio_tower_centre' */);
+    render.addEntry(model);
+    BlockRenderer.mapAtCoords(coords.x, coords.y, coords.z, render);
+
+    render = new ICRender.Model();
+    model = BlockRenderer.createModel();
+    model.addBox(0.4,0,0.4,0.6,1,0.6, [['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up', 0], ['iMod_radio_tower_up', 0], ['iMod_radio_tower_up', 0], ['iMod_radio_tower_up', 0]]);
+    render.addEntry(model);
+    BlockRenderer.mapAtCoords(coords.x, coords.y + 1, coords.z, render);
+});
+
+Network.addClientPacket("iMod.unmapRadioTower", function(packetData) {
+    var centreBlock = packetData.coords;
+
+    BlockRenderer.unmapAtCoords(centreBlock.x, centreBlock.y - 1, centreBlock.z);
+    BlockRenderer.unmapAtCoords(centreBlock.x, centreBlock.y, centreBlock.z);
+    BlockRenderer.unmapAtCoords(centreBlock.x, centreBlock.y + 1, centreBlock.z);
+});
+
+Block.registerPlaceFunction('iMod_radio_tower', function(coords, item, block, player, blocksource){
 	coords = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
-	var relBlock = World.getBlock(coords.x, coords.y, coords.z);
-	if (relBlock.id != 0 && relBlock.id != 9 && relBlock.id != 11) return;
-    World.setBlock(coords.x, coords.y, coords.z, BlockID.iMod_radio_tower, 0);
-	Player.decreaseCarriedItem(1);
+	var relBlock = blocksource.getBlockId(coords.x, coords.y, coords.z);
+    if (relBlock != 0 && relBlock != 9 && relBlock != 11) return;
+    var playerr = new PlayerActor(player);
+    blocksource.setBlock(coords.x, coords.y, coords.z, BlockID.iMod_radio_tower, 0);
+    //Player.decreaseCarriedItem(1);
+    var selectedSlot = playerr.getSelectedSlot();
+    var itemInSelectedSlot = playerr.getInventorySlot(selectedSlot);
+    itemInSelectedSlot.count > 1 ? playerr.setInventorySlot(selectedSlot, itemInSelectedSlot.id, itemInSelectedSlot.count - 1, itemInSelectedSlot.data, itemInSelectedSlot.extra || null) : playerr.setInventorySlot(selectedSlot, 0,0,0,null);
     var centreBlock = coords;
     var structure = true;
-    if(World.getBlock(coords.x, coords.y + 1, coords.z).id != BlockID.iMod_radio_tower){
-        if(World.getBlock(coords.x, coords.y - 2, coords.z).id == BlockID.iMod_radio_tower){
+    if(blocksource.getBlockId(coords.x, coords.y + 1, coords.z) != BlockID.iMod_radio_tower){
+        if(blocksource.getBlockId(coords.x, coords.y - 2, coords.z) == BlockID.iMod_radio_tower){
             if(getStructure({x: coords.x, y: coords.y - 2, z: coords.z}) >= 0) return;
             centreBlock = {x: coords.x, y: coords.y - 1, z: coords.z};
         } else {
@@ -56,8 +93,8 @@ Block.registerPlaceFunction('iMod_radio_tower', function(coords, item, block){
     } else {
         if(getStructure({x: coords.x, y: coords.y + 1, z: coords.z}) >= 0) return;
     }
-    if(World.getBlock(coords.x, coords.y - 1, coords.z).id != BlockID.iMod_radio_tower){
-        if(World.getBlock(coords.x, coords.y + 2, coords.z).id == BlockID.iMod_radio_tower){
+    if(blocksource.getBlockId(coords.x, coords.y - 1, coords.z) != BlockID.iMod_radio_tower){
+        if(blocksource.getBlockId(coords.x, coords.y + 2, coords.z) == BlockID.iMod_radio_tower){
             if(getStructure({x: coords.x, y: coords.y + 2, z: coords.z}) >= 0) return;
             centreBlock = {x: coords.x, y: coords.y + 1, z: coords.z};
         } else {
@@ -68,40 +105,25 @@ Block.registerPlaceFunction('iMod_radio_tower', function(coords, item, block){
     }
     if(structure){
         structures.push([{x: centreBlock.x, y: centreBlock.y - 1, z: centreBlock.z}, {x: centreBlock.x, y: centreBlock.y, z: centreBlock.z}, {x: centreBlock.x, y: centreBlock.y + 1, z: centreBlock.z}]);
-        
-        var render = new ICRender.Model();
-        var model = BlockRenderer.createModel();
-        model.addBox(0.3,0,0.3,0.7,0.6,0.7, [['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up2', 0], ['iMod_radio_tower_down', 0], ['iMod_radio_tower_down', 0], ['iMod_radio_tower_down', 0], ['iMod_radio_tower_down', 0]]);
-        model.addBox(0.4,0.6,0.4,0.6,1,0.6, [['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up2', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0]]/* 'iMod_radio_tower_centre' */);
-        render.addEntry(model);
-        BlockRenderer.mapAtCoords(centreBlock.x, centreBlock.y - 1, centreBlock.z, render);
-
-        render = new ICRender.Model();
-        model = BlockRenderer.createModel();
-        model.addBox(0.4,0,0.4,0.6,1,0.6, [['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up2', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0]]/* 'iMod_radio_tower_centre' */);
-        render.addEntry(model);
-        BlockRenderer.mapAtCoords(centreBlock.x, centreBlock.y, centreBlock.z, render);
-
-        render = new ICRender.Model();
-        model = BlockRenderer.createModel();
-        model.addBox(0.4,0,0.4,0.6,1,0.6, [['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up', 0], ['iMod_radio_tower_up', 0], ['iMod_radio_tower_up', 0], ['iMod_radio_tower_up', 0]]);
-        render.addEntry(model);
-        BlockRenderer.mapAtCoords(centreBlock.x, centreBlock.y + 1, centreBlock.z, render);
+        Network.sendToAllClients("iMod.mapRadioTower", {
+            coords: centreBlock,
+            dimension: blocksource.getDimension()
+        });
     }
 });
 
 Block.registerDropFunction('iMod_radio_tower', function(coords){
     if((structureId = getStructure(coords)) >= 0) {
         var centreBlock = structures[structureId][1];
-        BlockRenderer.unmapAtCoords(centreBlock.x, centreBlock.y - 1, centreBlock.z);
-        BlockRenderer.unmapAtCoords(centreBlock.x, centreBlock.y, centreBlock.z);
-        BlockRenderer.unmapAtCoords(centreBlock.x, centreBlock.y + 1, centreBlock.z);
+        Network.sendToAllClients("iMod.unmapRadioTower", {
+            coords: centreBlock
+        });
         structures.splice(structureId, 1);
     }
     return [[BlockID.iMod_radio_tower, 1, 0]]
 })
 
-Callback.addCallback('ItemUse', function (coords, item, block) {
+Callback.addCallback('ItemUse', function (coords, item, block, asd, player) {
     if(item.id != BlockID.iMod_radio_tower && block.id == BlockID.iMod_radio_tower && (structureId = getStructure(coords)) >= 0){
         Game.prevent();
         var centreCoords = structures[structureId][1];
@@ -110,10 +132,47 @@ Callback.addCallback('ItemUse', function (coords, item, block) {
             return Entity.getDistanceBetweenCoords(centreCoords, a) - Entity.getDistanceBetweenCoords(centreCoords, b);
         })
         var __coords = sortedDungeons[ctsCentreCoords][0];
-        if(__coords)Game.message('Nearest dungeon located at: ' + __coords.x + ', ' + __coords.y + ', ' + __coords.z);
-        else Game.message('Dungeon not found');
+        var client = Network.getClientForPlayer(player);
+        client.send("iMod.message", {text: "you just used stick!"});
+        var text;
+        if(__coords) text = 'Nearest dungeon located at: ' + __coords.x + ', ' + __coords.y + ', ' + __coords.z;
+        else text = 'Dungeon not found';
+        client.send("iMod.message", {text: text});
     }
 })
+
+Network.addClientPacket("iMod.initRadioTowers", function(packetData) {
+    for(var i in packetData.coords){
+        var coords = packetData.coords[i];
+        var render = new ICRender.Model();
+        var model = BlockRenderer.createModel();
+        model.addBox(0.3,0,0.3,0.7,0.6,0.7, [['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up2', 0], ['iMod_radio_tower_down', 0], ['iMod_radio_tower_down', 0], ['iMod_radio_tower_down', 0], ['iMod_radio_tower_down', 0]]);
+        model.addBox(0.4,0.6,0.4,0.6,1,0.6, [['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up2', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0]]/* 'iMod_radio_tower_centre' */);
+        render.addEntry(model);
+        BlockRenderer.mapAtCoords(coords.x, coords.y - 1, coords.z, render);
+
+        render = new ICRender.Model();
+        model = BlockRenderer.createModel();
+        model.addBox(0.4,0,0.4,0.6,1,0.6, [['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up2', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0], ['iMod_radio_tower_centre', 0]]/* 'iMod_radio_tower_centre' */);
+        render.addEntry(model);
+        BlockRenderer.mapAtCoords(coords.x, coords.y, coords.z, render);
+
+        render = new ICRender.Model();
+        model = BlockRenderer.createModel();
+        model.addBox(0.4,0,0.4,0.6,1,0.6, [['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up2', 0], ['iMod_radio_tower_up', 0], ['iMod_radio_tower_up', 0], ['iMod_radio_tower_up', 0], ['iMod_radio_tower_up', 0]]);
+        render.addEntry(model);
+        BlockRenderer.mapAtCoords(coords.x, coords.y + 1, coords.z, render);
+    }
+});
+
+Network.addServerPacket("iMod.clientInit", function(client, data) {
+    var coords = [];
+    for(var i in structures){
+        var centreBlock = structures[i][1];
+        coords.push(centreBlock);
+    }
+    client.send("iMod.initRadioTowers", {coords: coords});
+});
 
 Callback.addCallback('LevelDisplayed', function(){
     for(var i in structures){

@@ -2,5 +2,5 @@
   "enabled":true,
   "dev":false,
   "changelogEnabled": true,
-  "dungeonChance": 95
+  "dungeonChance": 5
 }

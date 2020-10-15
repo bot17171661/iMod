@@ -11,6 +11,10 @@ Block.createBlockWithRotation("iMod_carpet", [
 ]);
 mod_tip(BlockID["iMod_carpet"]);
 
+Item.registerIconOverrideFunction(BlockID.iMod_carpet, function(){
+    return {name:'iMod_item_carpet', data: 0};
+})
+
 for(var ka = 0; ka < 4; ka++){
     var render = new ICRender.Model();
     var _pis = [Math.PI,0,Math.PI/2,Math.PI*1.5];
